@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "index8": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -12,5 +13,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/gauravkumar7tech/SectionAA"
+  },
+  "dependencies": {
+    "ejs": "^4.0.1",
+    "express": "^5.2.1"
   }
 }

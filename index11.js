@@ -18,21 +18,21 @@
 // })
 
 
-// renmane the file 
+// remane the file code 
 // const fs=require("fs");
 // fs.rename("filr.txt","file50.txt", (err) =>{
 //     if(err){
 //         console.log(err);
 //     }
-//     console.log("folder has been deleted successfully");
+//     console.log("folder has been rename successfully");
 // })
 
-
+// show all file code 
 const fs=require("fs");
 fs.readdir("./", (err, files) =>{
     if(err){
         console.log(err);
     }
-    console.log("folder has been deleted successfully");
+    console.log("show all file successfully");
     console.log(files);
 })
