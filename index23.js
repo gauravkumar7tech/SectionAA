@@ -1,12 +1,21 @@
-const express= require("express");
-const path = require("path");
+const express=require("express");
+const app=express();
 
-const app = express();
-app.set("View engine","ejs");
+app.set("view engine","ejs");
 
-console.log(__dirname);
-app.get("/",(req, res)=>{
-    res.render("index", {name:"Gaurav"})
+app.set("views",__dirname);
+
+app.get("/",(req,res)=>{
+    res.render("index",{
+        name:"Vijay",
+        tech:"Node.js",
+        skills:["HTML","CSS","JavaScript","Node.js","Express.js"]
+    });
 });
+// skills.forEach(skill=>{
+//     console.log(skill);
+// });
 
-app.listen(3000);
+app.listen(3000,()=>{
+    console.log(`server is running at address http://localhost:3000`);
+});
