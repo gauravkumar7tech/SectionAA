@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Number Checker</title>
+</head>
+<body>
+  <h1>Check Even or Odd</h1>
+  <form action="/check" method="POST">
+    <input type="number" name="num" placeholder="Enter a number" required>
+    <button type="submit">Check</button>
+  </form>
+  <% if (typeof result !== 'undefined') { %>
+    <p><%= result %></p>
+  <% } %>
+</body>
+</html>
