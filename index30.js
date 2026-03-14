@@ -1,11 +1,7 @@
-// Manual Routing Implementation using Node's http module
-// This implements custom routing without using Express's built-in router
-
 const http = require('http');
 const url = require('url');
 const querystring = require('querystring');
 
-// Route handler functions
 const routes = {
   'GET': {},
   'POST': {},
@@ -13,7 +9,6 @@ const routes = {
   'DELETE': {}
 };
 
-// Function to register routes manually
 function get(path, handler) {
   routes['GET'][path] = handler;
 }
@@ -30,7 +25,6 @@ function del(path, handler) {
   routes['DELETE'][path] = handler;
 }
 
-// Manual route registration - example routes
 get('/', (req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.end(`
@@ -160,7 +154,6 @@ const server = http.createServer((req, res) => {
   const pathname = parsedUrl.pathname;
   const method = req.method;
   
-  // Remove trailing slash for consistent routing
   const cleanPath = pathname === '/' ? '/' : pathname.replace(/\/$/, '');
   
   console.log(`${method} ${cleanPath}`);
@@ -185,3 +178,25 @@ server.listen(PORT, () => {
   console.log('  GET  /api/users');
   console.log('  POST /api/users');
 });
+
+
+
+const express = require("express");
+const app = express();
+const port = 3000;
+
+app.get("/", (req, res) =>{
+    res.send("I, gaurav yadav form umrav nagar etah");
+})
+
+app.get("/about",(req, res)=>{
+    res.send("this is my about page for desh board");
+})
+
+app.get("/content", (req,res)=>{
+    res.send("this is my content page");
+})
+
+app.listen(port,()=>{
+    console.log(`server running on port http://localhost:${port}`);
+})
