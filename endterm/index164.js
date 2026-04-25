@@ -1,111 +1,103 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const app = express();
 const mongoose = require("mongoose");
+const shortid = require("shortid");
+
 app.use(express.json());
+
+
 async function connectDB() {
   try {
-    await mongoose.connect("mongodb://localhost:27017/myDB9");
-    console.log("DB connected successfully ✅ ");
+    await mongoose.connect("mongodb://localhost:27017/myDB5");
+    console.log("DB connected successfully ✅");
   } catch (error) {
-    console.log("DB connection error", error);
+    console.log("error:", error);
     process.exit(1);
   }
 }
 connectDB();
-const userSchema = new mongoose.Schema({
-  name: {
+
+
+const urlSchema = new mongoose.Schema({
+  originalUrl: {
     type: String,
     required: true,
   },
-  email: {
+  shortId: {
     type: String,
     required: true,
-    unique: true,
+    unique: true, 
   },
-  password: {
-    type: String,
-    required: true,
-  },
-  age: {
+  clicks: {
     type: Number,
-    min: 0,
+    default: 0,
   },
 });
 
-const User = mongoose.model("User", userSchema);
-app.post("/signup", async (req, res) => {
-  try {
-    const { name, email, age, password } = req.body;
+const Url = mongoose.model("Url", urlSchema);
 
-    const exist = await User.findOne({ email });
-    if (exist) {
-      return res.send("user already exists ❌");
+
+app.post("/shorten", async (req, res) => {
+  try {
+    const { originalUrl } = req.body;
+
+ 
+    try {
+      new URL(originalUrl);
+    } catch (error) {
+      return res.status(400).json({ error: "Please enter valid URL" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+  
+    const existing = await Url.findOne({ originalUrl });
+    if (existing) {
+      return res.status(200).json({
+        shortUrl: `http://localhost:3000/${existing.shortId}`,
+      });
+    }
 
-    const user = new User({
-      name,
-      email,
-      age,
-      password: hashedPassword,
+    const shortId = shortid.generate();
+
+    const url = new Url({
+      originalUrl,
+      shortId,
     });
 
-    await user.save();
-    res.send("signUp successful ✅");
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-app.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
+    await url.save();
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.send("user does not exist ❌");
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.send("please enter correct password ❌");
-    }
-
-    const token = jwt.sign({ id: user._id }, "mySecretKey", {
-      expiresIn: "1h",
+    res.status(201).json({
+      shortUrl: `http://localhost:3000/${shortId}`,
     });
-
-    res.json({ message: "login successful ✅", token });
   } catch (error) {
-    res.status(500).json({ message: "Internal server error", error });
+    console.log(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
-function authMiddleware(req, res, next) {
-  try {
-    const token = req.headers.authorization;
 
-    if (!token) {
-      return res.send("token not found ❌");
+app.get("/:shortId", async (req, res) => {
+  try {
+    const { shortId } = req.params;
+
+    const url = await Url.findOne({ shortId });
+
+    if (!url) {
+      return res.status(404).json({ error: "URL not found" });
     }
 
-    const decoded = jwt.verify(token, "mySecretKey");
+   
+    url.clicks++;
+    await url.save();
 
-    req.userId = decoded.id;
 
-    next();
+    res.redirect(url.originalUrl);
   } catch (error) {
-    res.send("invalid token ❌");
+    console.log(error);
+    res.status(500).json({ error: "Server error" });
   }
-} 
-
-app.get("/profile", authMiddleware, async (req, res) => {
-  const user = await User.findById(req.userId);
-  res.json(user);
 });
+
 
 app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+  console.log("Server running on http://localhost:3000 ");
 });
