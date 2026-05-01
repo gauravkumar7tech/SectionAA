@@ -18,10 +18,10 @@ app.use((req, res, next) => {
 
 // In-memory user data (for demo purposes)
 const users = [
-  { id: 1, username: 'john_doe', email: 'john@example.com', password: '' },
-  { id: 2, username: 'jane_smith', email: 'jane@example.com', password: '' },
-  { id: 3, username: 'bob_wilson', email: 'bob@example.com', password: '' },
-  { id: 4, username: 'alice_brown', email: 'alice@example.com', password: '' },
+  { id: 1, username: 'Akash', email: 'Akah@example.com', password: '' },
+  { id: 2, username: 'smith', email: 'smith@example.com', password: '' },
+  { id: 3, username: 'virat', email: 'virat@example.com', password: '' },
+  { id: 4, username: 'rahit', email: 'rohit@example.com', password: '' },
 ];
 
 // Pre-hash passwords for demo (normally you'd hash during registration)
